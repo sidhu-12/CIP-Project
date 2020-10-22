@@ -1,7 +1,8 @@
 (function(){
 
     
-    var parent = require("../models/Parent");
+    var parent = require("/app/BackendServer/Models/Parent");
+    //vara parent=require("../Models/Parent")
     
     function handle(data,res){
     
