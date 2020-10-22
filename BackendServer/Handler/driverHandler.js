@@ -1,7 +1,7 @@
 (function(){
 
     
-    var driver = require("../models/driver");
+    var driver = require("../models/Driver");
     //var parent1=require("../Models/Parent")
     
     module.exports.updateLocation = function(req,res){
