@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "cip",
-    "slug": "cip",
+    "name": "HOM2SCHl",
+    "slug": "HOM2SCHl",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/hom2schl.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,11 +16,17 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "useNextNotificationsApi": true,
+      "package": "com.sgr_3594.HOM2SCHl"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "HOM2SCHL"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/hom2schl.png"
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }

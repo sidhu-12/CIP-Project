@@ -1,0 +1,17 @@
+{
+	"db":{
+		"dev":{
+
+			"host":"mongodb://localhost:27017/hom2schl"
+		}
+	,
+
+		"prod":{
+
+			"host":"mongodb+srv://user123:Carpediem_3594@cluster0.cdted.mongodb.net/hom2schl?retryWrites=true&w=majority",
+			"port":"27017",
+			"database":"main"
+		}
+	},
+	"PORT" : 3000
+}
