@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView,MapView,ActivityIndicator,Alert,StyleSheet, Button,Text,TextInput, View ,TouchableOpacity,Switch,Image,Dimensions, TextComponent} from 'react-native';
+import { ScrollView,MapView,ActivityIndicator,Alert,StyleSheet, Button,Text,TextInput, View ,TouchableOpacity,Switch,Image,Dimensions, TextComponent, RefreshControl} from 'react-native';
 import getDirections from 'react-native-google-maps-directions';
 import * as Location from 'expo-location';
 import {CheckBox} from 'react-native-elements';
@@ -63,6 +63,7 @@ export class Attendance extends Component{
          textName:"Start Trip",
         attendance:[],
         time:'',
+        refreshing:false,
       }
      this.expoTokens=[];
      this.waypoints=[];
@@ -73,6 +74,19 @@ export class Attendance extends Component{
 
      }
      componentDidMount=()=>{
+      
+       this.onRefresh();
+    
+      /*if(this.list.length==0)
+      {
+      Alert.alert("No students are registered/present under this trip ");
+       this.props.navigation.pop();
+      }*/
+     }
+     onRefresh=async()=>{
+      this.setState({
+        refreshing:true
+      })
       this.list=this.props.route.params.studentList;
       let attendance=new Array().fill(false,this.list.length);
       this.setState({
@@ -82,11 +96,9 @@ export class Attendance extends Component{
       })
       
       console.log(this.list);
-      /*if(this.list.length==0)
-      {
-      Alert.alert("No students are registered/present under this trip ");
-       this.props.navigation.pop();
-      }*/
+      this.setState({
+        refreshing:false,
+      })
      }
      onStateChange=async(i)=>{
       let attendance=this.state.attendance;
@@ -99,7 +111,7 @@ export class Attendance extends Component{
       
       }
      
-    
+
    
      callDriver = (mobileNumber) => {
       const args = {
@@ -346,6 +358,12 @@ export class Attendance extends Component{
        style={{ marginTop: 10 }}
        contentContainerStyle={{ flexGrow: 1 }}
        showsVerticalScrollIndicator={true}
+       refreshControl={
+        <RefreshControl refreshing={this.state.refreshing} 
+        onRefresh={this.onRefresh} 
+        enabled={true}
+/>
+       }
      >
        <View style={styles.container1}>
          {this.output}

@@ -11,6 +11,7 @@ import {
   StyleSheet,
   Alert,
   Platform,
+  RefreshControl
 } from "react-native";
 import call from "react-native-phone-call";
 const url=require('../urlConstant.json');
@@ -26,9 +27,10 @@ export class DashBoardParent extends Component {
           mobileNumber:'',
           vanName:'',
           vanNumber:'',
-
+          
 
         },
+        refreshing:false,
        textName:"Mark Absent", 
     }
   }
@@ -49,6 +51,9 @@ export class DashBoardParent extends Component {
     
  }
  getDriverDetails=()=>{
+   this.setState({
+     refreshing:true,
+   })
   var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
         console.log(this.readyState);
@@ -80,6 +85,9 @@ export class DashBoardParent extends Component {
           
           
    }
+   this.setState({
+     refreshing:false,
+   })
   }
  componentWillUnmount=()=>{
     Notifications.removeNotificationSubscription(this.notificationListener);
@@ -203,6 +211,17 @@ export class DashBoardParent extends Component {
             >
               School Name : {this.props.route.params.schoolName}
             </Text>
+            <ScrollView
+      style={{ marginTop: 10 }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={true}
+      refreshControl={
+        <RefreshControl refreshing={this.state.refreshing} 
+        onRefresh={this.getDriverDetails} 
+        enabled={true}
+/>
+       }
+    >
           <View style={styles.container1}>
           <View
         style={{
@@ -283,7 +302,7 @@ export class DashBoardParent extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-        
+        </ScrollView>
         </View>
       
       );

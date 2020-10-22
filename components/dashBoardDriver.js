@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { ScrollView,MapView,ActivityIndicator,Alert,StyleSheet, Button,Text,TextInput, View ,TouchableOpacity,Switch,Image,Dimensions, TextComponent} from 'react-native';
+import { ScrollView,MapView,ActivityIndicator,Alert,StyleSheet, Button,Text,TextInput, View ,TouchableOpacity,Switch,Image,Dimensions, TextComponent,RefreshControl} from 'react-native';
 
 import * as TaskManager from 'expo-task-manager';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const url=require("../urlConstant.json");
-const LOCATION_UPDATER = 'background-location-task';
 var props1;
   
 class FromHome extends Component
@@ -15,6 +14,7 @@ class FromHome extends Component
       this.state = {
         output:'',
         destination:'',
+        refreshing:false,
         
       }
      this.finalList=[];
@@ -23,6 +23,9 @@ class FromHome extends Component
         this.getDriverDetails();
     }
     getDriverDetails=async()=>{
+      this.setState({
+        refreshing:true,
+      })
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
         console.log(this.readyState);
@@ -87,7 +90,10 @@ class FromHome extends Component
           this.studentList=message;  
         
       };
-    },500)
+    },600)
+    this.setState({
+      refreshing:false,
+    })
     }
     getStudentsList=(time)=>{
       var list=this.state.output.listOfStudents;
@@ -136,6 +142,12 @@ class FromHome extends Component
       style={{ marginTop: 10 }}
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={true}
+      refreshControl={
+        <RefreshControl refreshing={this.state.refreshing} 
+        onRefresh={this.getDriverDetails} 
+        enabled={true}
+/>
+       }
     >
       <View style={styles.container1}>
         <View
@@ -244,6 +256,7 @@ class ToHome extends Component{
     this.state = {
         output:'',
         destination:'',
+        refreshing:false
         
     }
     this.finalList=[];
@@ -254,6 +267,9 @@ class ToHome extends Component{
         
     }
     getDriverDetails=async()=>{
+      this.setState({
+        refreshing:true,
+      })
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
         console.log(this.readyState);
@@ -319,6 +335,9 @@ class ToHome extends Component{
         
       };
     },500)
+    this.setState({
+      refreshing:false,
+    })
     }
    
 
@@ -371,6 +390,12 @@ class ToHome extends Component{
       style={{ marginTop: 10 }}
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={true}
+      refreshControl={
+        <RefreshControl refreshing={this.state.refreshing} 
+        onRefresh={this.getDriverDetails} 
+        enabled={true}
+/>
+       }
     >
       <View style={styles.container1}>
       <View

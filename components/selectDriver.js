@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Picker,ScrollView,Platform,ActivityIndicator,Alert,StyleSheet, Button,Text,TextInput, View ,TouchableOpacity,Switch,Image,Dimensions} from 'react-native';
+import { Picker,ScrollView,Platform,ActivityIndicator,Alert,StyleSheet, Button,Text,TextInput, View ,TouchableOpacity,Switch,Image,Dimensions,RefreshControl} from 'react-native';
 const url=require('../urlConstant.json');
 import call from "react-native-phone-call";
 export default class SelectDriver extends Component{
@@ -12,7 +12,8 @@ export default class SelectDriver extends Component{
               morning:'7.30',
               evening:'4.00',
            },
-           renderList:[]
+           renderList:[],
+           refreshing:false,
           
        }
        
@@ -28,6 +29,9 @@ export default class SelectDriver extends Component{
     Alert.alert("You have selected the Driver "+object.driverName);
   }
    getDriverList=()=>{
+     this.setState({
+       refreshing:true,
+     })
     var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
         console.log(this.readyState);
@@ -55,6 +59,9 @@ export default class SelectDriver extends Component{
             renderList:message
           }); 
    }
+   this.setState({
+    refreshing:false,
+  })
   }
    callDriver = (mobileNumber) => {
     const args = {
@@ -232,7 +239,15 @@ export default class SelectDriver extends Component{
         }
     return (
       <View style={styles.container}>
-      <ScrollView>
+            <ScrollView
+      style={{ marginTop: 10 }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={true}
+      refreshControl={
+        <RefreshControl refreshing={this.state.refreshing} 
+        onRefresh={this.getDriverList} 
+        enabled={true}
+/>}>
       {
         output
       }

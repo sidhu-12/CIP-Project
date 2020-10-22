@@ -11,9 +11,9 @@ export default class Tracker extends Component{
             latitude: 0,
             longitude: 0,
            showMap:false,
-           routeCoordinates:[],
+           routeCoordinates:[
+           ],
         }
-        this.routeCoordinates=[];
         
        }
        componentDidMount=()=>{
@@ -55,19 +55,29 @@ export default class Tracker extends Component{
             }
             else
             {
+              let temp;
+              console.log(this.state.routeCoordinates[this.state.routeCoordinates.length-1]);
+              if(this.state.routeCoordinates[this.state.routeCoordinates.length-1]!=location)
+              {
+                   temp=this.state.routeCoordinates.concat({
+                  latitude:location.latitude+0.0001,
+                  longitude:location.longitude-0.001,
+                  
+               });
+              }else{
+                  temp=this.state.routeCoordinates;
+              }
+
             this.setState({
                 latitude:location.latitude,
                 longitude:location.longitude,
                 showMap:true,
+                routeCoordinates:temp,
+               
             });
-            this.setState(
-              {
-                routeCoordinates:this.routeCoordinates.concat({
-              latitude:location.latitude,
-              longitude:location.longitude,
-                
-            })});
           console.log("Location Received");
+          console.log(this.state.routeCoordinates);
+        
         }
         
         };
@@ -96,14 +106,17 @@ export default class Tracker extends Component{
              >
               
               <Polyline coordinates={this.state.routeCoordinates}
-              strokeColor="red"
+              strokeColor="#00c0e2"
               strokeWidth={12}
               
               />
     <Marker
       coordinate={{latitude:this.state.latitude,longitude:this.state.longitude}}
       title={"Driver Location"}
-    />
+      pinColor="#00c0e2"
+      >
+      </Marker>
+    
   </MapView>)}
          </View>
            )

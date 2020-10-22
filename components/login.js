@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React,{Component} from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {Image, Keyboard,Platform,Alert,StyleSheet,Text,TextInput, View ,TouchableOpacity,Dimensions,KeyboardAvoidingView} from 'react-native';
+import {Image, Keyboard,Platform,Alert,StyleSheet,Text,TextInput, View ,TouchableOpacity,Dimensions,KeyboardAvoidingView,ActivityIndicator} from 'react-native';
 const url=require("../urlConstant.json")
 var props1;
  class LoginParent extends Component {  
@@ -14,6 +14,7 @@ var props1;
         loginInProcess:false,  
         toggleText: 'Show', 
         keyboardOffset:0, 
+        load:false,
     }; 
   }
     handleToggle = () => {  
@@ -32,7 +33,7 @@ var props1;
         Keyboard.dismiss();
     }
   }
-  submitForm =()=>{ 
+  submitForm =()=>{
     const {username,password}=this.state;
     var num_pattern = /^[0-9]{10}$/;
     if(this.state.username==''||this.state.password=='')
@@ -71,6 +72,7 @@ var props1;
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send(JSON.stringify(auth));
     const navigate = (message) => {
+      
       Alert.alert("Login Successfully");
       props1.navigation.navigate("DashboardParent",{
         mobileNumber:auth.username,
@@ -80,7 +82,7 @@ var props1;
       });
     };
   }
-    this.setState({loginInProcess:false})
+    this.setState({loginInProcess:false,load:false})
 
   }
 
@@ -131,12 +133,13 @@ var props1;
                  <TouchableOpacity onPress={()=>{
               if(this.state.loginInProcess==false)
               {
-                this.setState({loginInProcess:true});
+                this.setState({loginInProcess:true,load:true});
                 this.submitForm();
               }
 
               
-            }} style={styles.btnLogin}>
+            }} style={styles.btnLogin}
+            disabled={this.state.loginInProcess}>
               <Text
                 style={{ color: "white", fontSize: 20, textAlign: "center" }}
               >
@@ -146,6 +149,11 @@ var props1;
         <TouchableOpacity onPress={()=>{
           props1.navigation.navigate("Register")
         }}>  
+          <ActivityIndicator
+              size="large"
+              color="skyblue"
+              animating={this.state.load}
+            />
                  <Text  style={{fontSize: 14,color:'blue',fontWeight:"100",textDecorationLine:'underline'}}>Don't have an account? Register as a Parent</Text>  
                  </TouchableOpacity>
      </KeyboardAvoidingView>
@@ -165,6 +173,7 @@ class LoginDriver extends Component {
         loginInProcess:false,  
         toggleText: 'Show', 
         keyboardOffset:0, 
+        load:false,
     }; 
   }
     handleToggle = () => {  
@@ -184,6 +193,9 @@ class LoginDriver extends Component {
     }
   }
   submitForm =()=>{ 
+    this.setState({
+      load:true,
+    })
     const {username,password}=this.state;
     var num_pattern = /^[0-9]{10}$/;
     if(this.state.username==''||this.state.password=='')
@@ -228,7 +240,7 @@ class LoginDriver extends Component {
       });
     };
   }
-    this.setState({loginInProcess:false})
+    this.setState({loginInProcess:false,load:false})
 
   }
 
@@ -279,12 +291,14 @@ class LoginDriver extends Component {
                  <TouchableOpacity onPress={()=>{
               if(this.state.loginInProcess==false)
               {
-                this.setState({loginInProcess:true});
+                this.setState({loginInProcess:true,load:true});
                 this.submitForm();
               }
 
               
-            }} style={styles.btnLogin}>
+            }} style={styles.btnLogin}
+            disabled={this.state.loginInProcess}
+            >
               <Text
                 style={{ color: "white", fontSize: 20, textAlign: "center" }}
               >
@@ -292,6 +306,11 @@ class LoginDriver extends Component {
               </Text>
             </TouchableOpacity>
      </KeyboardAvoidingView>
+     <ActivityIndicator
+              size="large"
+              color="skyblue"
+              animating={this.state.load}
+            />
      </View>
 
   );

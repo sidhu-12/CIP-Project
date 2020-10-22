@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView,MapView,ActivityIndicator,Alert,StyleSheet, Button,Text,TextInput, View ,TouchableOpacity,Switch,Image,Dimensions, TextComponent} from 'react-native';
+import { ScrollView,MapView,ActivityIndicator,Alert,StyleSheet, Button,Text,TextInput, View ,TouchableOpacity,Switch,Image,Dimensions, TextComponent,RefreshControl} from 'react-native';
 import getDirections from 'react-native-google-maps-directions';
 import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
@@ -61,6 +61,7 @@ export class StudentList extends Component{
          destination:'',
          textName:"Start Trip",
         time:'',
+        refreshing:false,
       }
      this.expoTokens=[];
      this.waypoints=[];
@@ -84,7 +85,19 @@ export class StudentList extends Component{
        this.props.navigation.pop();
       }*/
      }
-     
+     onRefresh=()=>{
+       this.setState({
+         refreshing:true,
+       })
+      this.list=this.props.route.params.studentList;
+      this.setState({
+          time:this.props.route.params.time,
+          destination:this.props.route.params.destination,
+          refreshing:false,
+      })
+      
+      console.log(this.list);
+     }
     
    
      callDriver = (mobileNumber) => {
@@ -300,10 +313,15 @@ export class StudentList extends Component{
            {"Time: "} {this.state.time} { "PM"}
          </Text>
          <ScrollView
-       style={{ marginTop: 10 }}
-       contentContainerStyle={{ flexGrow: 1 }}
-       showsVerticalScrollIndicator={true}
-     >
+      style={{ marginTop: 10 }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={true}
+      refreshControl={
+        <RefreshControl refreshing={this.state.refreshing} 
+        onRefresh={this.onRefresh} 
+        enabled={true}
+/>}>
+
        <View style={styles.container1}>
          {this.output}
         </View>

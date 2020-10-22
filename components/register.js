@@ -244,16 +244,18 @@ export default class Register extends Component{
 
                     }
                     >
-                      <Marker coordinate={{latitude:this.state.locationLatitude,longitude:this.state.locationLongitude}}/>
+                      <Marker  pinColor="#00c0e2" coordinate={{latitude:this.state.locationLatitude,longitude:this.state.locationLongitude}}/>
                    
                     </MapView>
                     <TouchableOpacity onPress={()=>{
                         this.setState({
                           showMap:false
                         });
-                      }} >
+                        
+                      }}
+                      style={styles.locationButton} >
                       <Text
-                        style={{ color: "black", fontSize: 20, textAlign: "center" }}
+                        style={{ color: "white", fontSize: 20, textAlign: "center"  }}
                       >
                         Set Location
                       </Text>
@@ -291,14 +293,14 @@ const styles = StyleSheet.create({
   },
   locationButton: {
     width: WIDTH - 60,
-    height: 30,
+    height: 45,
     borderRadius: 20,
     fontSize: 20,
     backgroundColor: "#00c0e2",
     justifyContent:'center',
     paddingLeft: 20,
     marginTop: 10,
-    marginLeft: 10,
+    marginLeft: 30,
   },
   btnLogin: {
     width: WIDTH - 60,

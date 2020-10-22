@@ -2,7 +2,7 @@
 
     
     var driver = require("/app/BackendServer/Models/Driver");
-    //var parent1=require("../Models/Parent")
+    //var driver=require("../Models/Driver")
     
     module.exports.updateLocation = function(req,res){
         
