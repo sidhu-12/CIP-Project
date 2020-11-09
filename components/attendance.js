@@ -140,7 +140,7 @@ export class Attendance extends Component{
             to: this.expoTokens[i],
             sound: 'default',
             title: 'Started !!!!',
-            body: 'Your ward has started successfully from the trip',
+            body: 'Your ward has started trip successfully',
             data: { data: 'Thala' },
             
           };
@@ -254,7 +254,7 @@ export class Attendance extends Component{
    endTrip=async(time)=>
    {
      Location.stopLocationUpdatesAsync(LOCATION_UPDATER);
-       Alert.alert("Stopped Sharing");
+     Alert.alert("Stopped Sharing","Your location sharing has been stopped.");
      var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
    console.log(this.readyState);

@@ -105,11 +105,6 @@ export default class Tracker extends Component{
                style={{ ...StyleSheet.absoluteFillObject }}
              >
               
-              <Polyline coordinates={this.state.routeCoordinates}
-              strokeColor="#00c0e2"
-              strokeWidth={12}
-              
-              />
     <Marker
       coordinate={{latitude:this.state.latitude,longitude:this.state.longitude}}
       title={"Driver Location"}

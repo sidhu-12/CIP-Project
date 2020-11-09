@@ -1,7 +1,8 @@
 import 'react-native-gesture-handler';
 import React,{Component} from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {Image, Keyboard,Platform,Alert,StyleSheet,Text,TextInput, View ,TouchableOpacity,Dimensions,KeyboardAvoidingView,ActivityIndicator} from 'react-native';
+import * as LocalAuthentication from 'expo-local-authentication';
+import {Image,BackHandler, Keyboard,Platform,Alert,StyleSheet,Text,TextInput, View ,TouchableOpacity,Dimensions,KeyboardAvoidingView,ActivityIndicator} from 'react-native';
 const url=require("../urlConstant.json")
 var props1;
  class LoginParent extends Component {  
@@ -27,20 +28,46 @@ var props1;
           this.setState({ toggleText: 'Show' });  
       }  
   };  
-  componentWillUnmount=()=>{
-    if(Platform.OS=='ios')
-    {
-        Keyboard.dismiss();
-    }
+  componentDidMount() {
+    this.checkDeviceForHardware();
+    this.checkForBiometrics();     
   }
-  submitForm =()=>{
-    const {username,password}=this.state;
+checkDeviceForHardware = async () => {
+ let compatible = await LocalAuthentication.hasHardwareAsync();
+ if (compatible) {
+ console.log('Compatible Device!');}
+ else 
+ Alert.alert('Current device does not have the necessary hardware!');
+};
+  checkForBiometrics = async () => {
+  let biometricRecords = await LocalAuthentication.isEnrolledAsync();
+  if (!biometricRecords) {
+  alert('No Biometrics Found')
+  } 
+   else {
+     console.log("Biometrics found");
+ }
+};
+  submitForm =async()=>{
+    Keyboard.dismiss();
+    this.setState({
+      load:true,
+    })  
+    let result=await LocalAuthentication.authenticateAsync();
+    if(result.success)
+    {
+      const {username,password}=this.state;
     var num_pattern = /^[0-9]{10}$/;
+    console.log(this.state.load);
     if(this.state.username==''||this.state.password=='')
     {
       Alert.alert("Please enter the Mobile Number or password");
+      this.setState({loginInProcess:false,load:false})
+      
     }else if (!num_pattern.test(this.state.username)) {
-      Alert.alert("Please Fill the Correct Mobile Number");}
+      Alert.alert("Please Fill the Correct Mobile Number");
+      this.setState({loginInProcess:false,load:false})
+    }
      else
     {
     var auth = {
@@ -54,14 +81,18 @@ var props1;
         var message=JSON.parse(this.responseText);
         if (message.responseMessage == "Login Successfully") {
           navigate(message);
+          stopLoading();
         }
         else
         {
           Alert.alert(message.responseMessage);
+          stopLoading();
+          
         }
       }
       if (this.readyState == 4 && this.status != 200) {
         Alert.alert("Network Error","Please check your network connection");
+        stopLoading();
       }
     };
     xhr.open(
@@ -71,9 +102,13 @@ var props1;
     );
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send(JSON.stringify(auth));
+    const stopLoading = () => {
+      this.setState({ load: false,loginInProcess:false });
+    };
     const navigate = (message) => {
       
-      Alert.alert("Login Successfully");
+      Alert.alert("Login Successful");
+      this.setState({ load: false });
       props1.navigation.navigate("DashboardParent",{
         mobileNumber:auth.username,
         parentName:message.parentName,
@@ -82,7 +117,12 @@ var props1;
       });
     };
   }
-    this.setState({loginInProcess:false,load:false})
+}
+else
+{
+  Alert.alert("Local Authentication failed","Please try again");
+  this.setState({ load: false,loginInProcess:false });
+}
 
   }
 
@@ -133,7 +173,8 @@ var props1;
                  <TouchableOpacity onPress={()=>{
               if(this.state.loginInProcess==false)
               {
-                this.setState({loginInProcess:true,load:true});
+                this.setState({loginInProcess:true});
+                console.log(this.state.load);
                 this.submitForm();
               }
 
@@ -149,13 +190,14 @@ var props1;
         <TouchableOpacity onPress={()=>{
           props1.navigation.navigate("Register")
         }}>  
-          <ActivityIndicator
+        
+                 <Text  style={{fontSize: 14,color:'blue',fontWeight:"100",textDecorationLine:'underline',marginTop:10}}>Don't have an account? Register as a Parent</Text>  
+                 </TouchableOpacity>
+                 <ActivityIndicator
               size="large"
               color="skyblue"
               animating={this.state.load}
             />
-                 <Text  style={{fontSize: 14,color:'blue',fontWeight:"100",textDecorationLine:'underline'}}>Don't have an account? Register as a Parent</Text>  
-                 </TouchableOpacity>
      </KeyboardAvoidingView>
      </View>
 
@@ -192,17 +234,22 @@ class LoginDriver extends Component {
         Keyboard.dismiss();
     }
   }
-  submitForm =()=>{ 
+  submitForm =async()=>{ 
     this.setState({
       load:true,
     })
-    const {username,password}=this.state;
+      let result=await LocalAuthentication.authenticateAsync();
+      if(result.success)
+      {    const {username,password}=this.state;
     var num_pattern = /^[0-9]{10}$/;
     if(this.state.username==''||this.state.password=='')
     {
       Alert.alert("Please enter the Mobile Number or password");
+      this.setState({loginInProcess:false,load:false});
     }else if (!num_pattern.test(this.state.username)) {
-      Alert.alert("Please Fill the Correct Mobile Number");}
+      Alert.alert("Please Fill the Correct Mobile Number");
+      this.setState({loginInProcess:false,load:false});
+    }
      else
     {
     var auth = {
@@ -216,10 +263,12 @@ class LoginDriver extends Component {
         var message=JSON.parse(this.responseText);
         if (message.responseMessage == "Login Successfully") {
           navigate();
+          stopLoading();
         }
         else
         {
           Alert.alert(message.responseMessage);
+          stopLoading();
         }
       }
       if (this.readyState == 4 && this.status != 200) {
@@ -233,14 +282,26 @@ class LoginDriver extends Component {
     );
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send(JSON.stringify(auth));
+    const stopLoading = () => {
+      this.setState({ load: false,loginInProcess:false });
+    };
     const navigate = () => {
-      Alert.alert("Login Successfully");
+      Alert.alert("Login Successful");
+      this.setState({
+        load:false,
+      })
       props1.navigation.navigate("DashBoard",{
         mobileNumber:auth.username
       });
     };
   }
-    this.setState({loginInProcess:false,load:false})
+   
+}
+else
+{
+  Alert.alert("Local Authentication failed","Please try again");
+  this.setState({ load: false,loginInProcess:false });
+}
 
   }
 
@@ -291,7 +352,7 @@ class LoginDriver extends Component {
                  <TouchableOpacity onPress={()=>{
               if(this.state.loginInProcess==false)
               {
-                this.setState({loginInProcess:true,load:true});
+                this.setState({loginInProcess:true});
                 this.submitForm();
               }
 

@@ -193,7 +193,7 @@ export class StudentList extends Component{
     endTrip=async()=>
     {
       Location.stopLocationUpdatesAsync(LOCATION_UPDATER);
-        Alert.alert("Stopped Sharing");
+        Alert.alert("Stopped Sharing","Your location sharing has been stopped.");
       var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
     console.log(this.readyState);

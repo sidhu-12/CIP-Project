@@ -194,19 +194,18 @@ export default class SelectDriver extends Component{
           }}
         >
           <TouchableOpacity
-            style={styles.btn1}
+            
             onPress={() => this.callDriver(this.state.renderList[i].mobileNumber)}
           >
-            <Text
+                <Image
+                source={require("../assets/call-icon.png")}
               style={{
-                textAlign: "center",
-                color: "white",
-                fontSize: 15,
-                fontWeight: "700",
+              width: 45,
+              height: 45,
+              borderRadius: 40 / 2,
+              marginBottom:10
               }}
-            >
-              Call
-            </Text>
+        />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btn2}

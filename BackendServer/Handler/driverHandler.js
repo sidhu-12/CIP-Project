@@ -34,7 +34,7 @@
             {
                 throw err;
             }
-            console.log(data[0].location.latitude+data[0].location.longitude)
+            console.log(data[0].location.latitude+" "+data[0].location.longitude)
             res.json({latitude:data[0].location.latitude,longitude:data[0].location.longitude})
         }
         )

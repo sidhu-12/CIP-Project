@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "HOM2SCHl",
-    "slug": "HOM2SCHl",
-    "version": "1.0.0",
+    "slug": "hom2schl_updated_3",
+    "description":"Creative and Innovative Project Done by \n Sidharth Ganesh R,\n Raveena R \n Varsha A",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -27,7 +28,7 @@
     "web": {
       "favicon": "./assets/hom2schl.png"
     },
-    "entryPoint": "node_modules/expo/AppEntry.js",
-    "description": ""
+    "entryPoint": "node_modules/expo/AppEntry.js"
+   
   }
 }
